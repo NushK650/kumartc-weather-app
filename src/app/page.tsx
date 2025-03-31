@@ -1,6 +1,6 @@
 
 import React from "react";
-import SearchComp from "../components/SearchComp"; 
+import SearchComp from "@/components/SearchComp"; 
 
 const Page = () => {
     return (

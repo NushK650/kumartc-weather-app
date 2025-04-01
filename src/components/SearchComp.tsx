@@ -3,13 +3,24 @@ import React, { useState, useEffect } from "react";
 import { getWeatherData, getForecast } from "@/app/api/weather";
 import { saveToLocalStorage, getLocalStorage, removeFromLocalStorage } from "@/lib/localStorage";
 
-
+interface Weather {
+    name: string;
+    weather: { main: string; description: string; icon: string }[];
+    main: { temp: number; temp_min: number; temp_max: number };
+  }
+  
+  interface ForecastItem {
+    dt_txt: string;
+    weather: { main: string; description: string; icon: string }[];
+  }
+  
+  type Forecast = ForecastItem[];
 
 const SearchComp = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [favorites, setFavorites] = useState(getLocalStorage());
-    const [weather, setWeather] = useState<any>(null);
-    const [forecast, setForecast] = useState<any>(null);
+    const [weather, setWeather] = useState<Weather | null>(null);
+const [forecast, setForecast] = useState<Forecast | null>(null);
     const [dateTime, setDateTime] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [showFavorites, setShowFavorites] = useState(false);
@@ -175,6 +186,8 @@ const SearchComp = () => {
                                 <p className="text-2xl md:text-3xl font-bold">
                                     {weather.name.toUpperCase()}
                                 </p>
+                                <p className="text-xl font-black">{dateTime}</p>
+
                             </span>
                         </div>
                         
@@ -197,7 +210,7 @@ const SearchComp = () => {
     <div className="mt-8">
         <h2 className="text-2xl font-bold mb-10 text-center ">7-Day Forecast</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-1 text-center">
-            {forecast.map((forecastItem: any) => {
+            {forecast.map((forecastItem: ForecastItem) => {
                 const dayName = new Date(forecastItem.dt_txt).toLocaleDateString("en-US", { weekday: "short" });
 
                 return (

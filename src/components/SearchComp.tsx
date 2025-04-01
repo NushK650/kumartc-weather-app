@@ -67,7 +67,7 @@ const [forecast, setForecast] = useState<Forecast | null>(null);
             if (forecastResponse.error) {
                 setError(forecastResponse.error);
             } else {
-                const dailyForecast = forecastResponse.data.list.filter((item: any, index: number) => index % 8 === 0);
+                const dailyForecast = forecastResponse.data.list.filter((item: ForecastItem, index: number) => index % 8 === 0);
                 setForecast(dailyForecast);
                 setError(null);
             }

@@ -13,6 +13,7 @@ export const getWeatherData = async (city: string) => {
         const data = await response.json();
         return { data, error: null };
     } catch (error) {
+        console.error
         return { data: null, error: "City not found. Please try again." };
     }
 };
@@ -30,6 +31,7 @@ export const getForecast = async (city: string) => {
         const data = await response.json();
         return { data, error: null };
     } catch (error) {
+        console.error;
         return { data: null, error: "Unable to fetch forecast data. Please try again." };
     }
 };

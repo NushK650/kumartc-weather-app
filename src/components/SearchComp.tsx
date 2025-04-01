@@ -1,28 +1,9 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { getWeatherData, getForecast } from "@/app/api/weather";
+import { saveToLocalStorage, getLocalStorage, removeFromLocalStorage } from "@/lib/localStorage";
 
 
-function saveToLocalStorage(name: string): void {
-    let favorites: string[] = getLocalStorage();
-    if (!favorites.includes(name)) {
-        favorites.push(name);
-    }
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-}
-
-
-function getLocalStorage(): string[] {
-    let data = localStorage.getItem("favorites");
-    return data ? JSON.parse(data) : [];
-}
-
-
-function removeFromLocalStorage(name: string): void {
-    let favorites: string[] = getLocalStorage();
-    favorites = favorites.filter(city => city !== name);
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-}
 
 const SearchComp = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -216,7 +197,7 @@ const SearchComp = () => {
     <div className="mt-8">
         <h2 className="text-2xl font-bold mb-10 text-center ">7-Day Forecast</h2>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-1 text-center">
-            {forecast.map((forecastItem: any, index: number) => {
+            {forecast.map((forecastItem: any) => {
                 const dayName = new Date(forecastItem.dt_txt).toLocaleDateString("en-US", { weekday: "short" });
 
                 return (

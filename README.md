@@ -34,8 +34,11 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-Peer Review:Chris Wells-Hott The design is great and fully responsive. When i clicked on the item in the favorites list it did not search the item i click on, maybe add that for better user experience. Another tip would be to break your sections down into individual components. It will help with debuging and reusablity. Great work.
+Name: Tanush Kumar
+Date: 3/31/25
+Project Name: weather app rebuild
+Description:  rebuild weather app
+Peer Review:Chris Wells-Hott The design is great and fully responsive. When i clicked on the item in the favorites list it did not search the item i click on, maybe add that for better user experience. Another tip would be to break your sections down into individual components. It will help with debuging and reusablity. Great work. 
 
 
 

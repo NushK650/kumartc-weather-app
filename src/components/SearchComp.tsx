@@ -28,15 +28,30 @@ const [forecast, setForecast] = useState<Forecast | null>(null);
     useEffect(() => {
         const updateClock = () => {
             const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes().toString().padStart(2, "0");
-            setDateTime(`${hours}:${minutes}`);
+            const options: Intl.DateTimeFormatOptions = {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+            };
+            let formattedDate = now.toLocaleString("en-US", options);
+    
+            // Ensure uppercase weekday
+            formattedDate = formattedDate.replace(/^\w{3}/, (match) => match.toUpperCase());
+    
+            // Ensure lowercase am/pm
+            formattedDate = formattedDate.replace("AM", "am").replace("PM", "pm");
+    
+            setDateTime(formattedDate);
         };
-
+    
         updateClock();
         const interval = setInterval(updateClock, 60000);
         return () => clearInterval(interval);
     }, []);
+    
 
     const handleSearch = async () => {
         if (searchQuery.trim()) {
@@ -183,10 +198,10 @@ const [forecast, setForecast] = useState<Forecast | null>(null);
                                 {weather.weather[0].main}
                             </span>
                             <span className="text-center">
-                                <p className="text-2xl md:text-3xl font-bold">
+                                <p className="text-2xl md:text-3xl font-black">
                                     {weather.name.toUpperCase()}
                                 </p>
-                                <p className="text-xl font-black">{dateTime}</p>
+                                <p className="text-xl font-bold">{dateTime}</p>
 
                             </span>
                         </div>

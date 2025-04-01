@@ -2,7 +2,7 @@
 
 export function saveToLocalStorage(name: string): void {
     if (typeof window !== "undefined") {
-        let favorites: string[] = getLocalStorage();
+        const favorites: string[] = getLocalStorage();
         if (!favorites.includes(name)) {
             favorites.push(name);
         }
@@ -12,7 +12,7 @@ export function saveToLocalStorage(name: string): void {
 
 export function getLocalStorage(): string[] {
     if (typeof window !== "undefined") {
-        let data = localStorage.getItem("favorites");
+        const data = localStorage.getItem("favorites");
         try {
             return data ? JSON.parse(data) : [];
         } catch (error) {

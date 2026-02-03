@@ -136,3 +136,50 @@
     transform: translateY(-16px);
   }
 }
+
+.radar-bg {
+  background: radial-gradient(circle at 20% 20%, rgba(18, 72, 110, 0.45), transparent 45%),
+    radial-gradient(circle at 80% 10%, rgba(23, 160, 190, 0.35), transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(10, 40, 80, 0.55), transparent 45%),
+    #050915;
+}
+
+.radar-grid {
+  background-image: linear-gradient(rgba(33, 230, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(33, 230, 255, 0.06) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.6;
+}
+
+.radar-rings {
+  background-image: radial-gradient(circle at center, rgba(33, 230, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(33, 230, 255, 0.18) 1px, transparent 1px),
+    radial-gradient(circle at center, rgba(33, 230, 255, 0.12) 1px, transparent 1px);
+  background-size: 220px 220px, 380px 380px, 540px 540px;
+  background-position: center;
+  opacity: 0.35;
+}
+
+.scanline {
+  background: linear-gradient(180deg, transparent 0%, rgba(33, 230, 255, 0.08) 50%, transparent 100%);
+  animation: scan 10s linear infinite;
+  mix-blend-mode: screen;
+  opacity: 0.4;
+}
+
+.glow-text {
+  text-shadow: 0 0 18px rgba(33, 230, 255, 0.55);
+}
+
+.glow-card {
+  box-shadow: inset 0 0 0 1px rgba(33, 230, 255, 0.08), 0 0 40px rgba(33, 230, 255, 0.12);
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-40%);
+  }
+  100% {
+    transform: translateY(40%);
+  }
+}

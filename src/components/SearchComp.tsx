@@ -183,32 +183,32 @@ const SearchComp = () => {
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-[#F6F1EA] text-[#1A1A1A]">
-            <div className="pointer-events-none absolute -top-24 -left-16 h-72 w-72 rounded-full bg-[#FFD29D] opacity-70 blur-3xl animate-[float_12s_ease-in-out_infinite]" />
-            <div className="pointer-events-none absolute right-0 top-12 h-80 w-80 rounded-full bg-[#A8D8FF] opacity-60 blur-3xl animate-[float_16s_ease-in-out_infinite]" />
-            <div className="pointer-events-none absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-[#C7F0D8] opacity-60 blur-3xl animate-[float_14s_ease-in-out_infinite]" />
+        <div className="radar-bg relative min-h-screen text-[#E8F5FF]">
+            <div className="radar-grid absolute inset-0" />
+            <div className="radar-rings absolute inset-0" />
+            <div className="scanline absolute inset-0" />
 
             <div className="relative z-10 mx-auto max-w-6xl px-6 py-10">
                 <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <p className="text-xs uppercase tracking-[0.35em] text-black/50">Weather Atlas</p>
-                        <h1 className="font-display text-4xl md:text-6xl leading-tight">
-                            Forecasts with a softer edge.
+                        <p className="text-xs uppercase tracking-[0.35em] text-[#7DE2FF]/70">Night City Radar</p>
+                        <h1 className="font-display text-4xl md:text-6xl leading-tight glow-text">
+                            Stormwatch Interface
                         </h1>
-                        <p className="mt-2 text-sm text-black/60">
-                            Search by city or use your current location for instant context.
+                        <p className="mt-2 text-sm text-[#B9D6FF]/70">
+                            Live atmospheric scan with neon precision.
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={toggleFavorites}
-                            className="lg:hidden rounded-full border border-black/20 bg-white/70 px-4 py-2 text-sm font-semibold"
+                            className="lg:hidden rounded-full border border-[#2A3C66] bg-[#0C1430]/70 px-4 py-2 text-sm font-semibold text-[#B9D6FF]"
                         >
-                            {showFavorites ? "Hide favorites" : "Show favorites"}
+                            {showFavorites ? "Hide targets" : "Show targets"}
                         </button>
                         <button
                             onClick={requestUserLocation}
-                            className="rounded-full bg-black px-4 py-2 text-sm font-semibold text-white"
+                            className="rounded-full bg-[#21E6FF] px-4 py-2 text-sm font-semibold text-[#04101D] shadow-[0_0_24px_rgba(33,230,255,0.45)]"
                             disabled={isLocating}
                         >
                             {isLocating ? "Locating..." : "Use my location"}
@@ -216,93 +216,93 @@ const SearchComp = () => {
                     </div>
                 </header>
 
-                <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-                    <section className="rounded-3xl border border-black/10 bg-white/75 p-6 shadow-[0_30px_80px_-60px_rgba(0,0,0,0.45)] backdrop-blur">
+                <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+                    <section className="glow-card rounded-3xl border border-[#1F2A4A] bg-[#0B1230]/80 p-6 shadow-[0_30px_80px_-60px_rgba(15,220,255,0.7)] backdrop-blur">
                         <div className="mb-6 flex flex-col gap-3">
-                            <label className="text-sm font-semibold text-black/70">Search a city</label>
+                            <label className="text-sm font-semibold text-[#7DE2FF]">Search sector</label>
                             <div className="relative">
                                 <input
                                     type="text"
-                                    placeholder="Try Austin, Reykjavik, or Tokyo"
-                                    className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3 pr-12 text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-black/30"
+                                    placeholder="Try Oslo, Seoul, or Lima"
+                                    className="w-full rounded-2xl border border-[#26335A] bg-[#0A1433] px-4 py-3 pr-20 text-base text-[#E8F5FF] shadow-sm focus:outline-none focus:ring-2 focus:ring-[#21E6FF]/60"
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                 />
                                 <button
                                     onClick={handleSearch}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black px-3 py-2 text-xs font-semibold text-white"
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-[#21E6FF] px-3 py-2 text-xs font-semibold text-[#04101D]"
                                 >
-                                    Search
+                                    Scan
                                 </button>
                             </div>
                         </div>
 
                         {!weather && (
-                            <div className="mb-6 rounded-2xl border border-black/10 bg-white/80 p-4">
-                                <p className="font-semibold">Use your current location?</p>
-                                <p className="text-sm text-black/60">
+                            <div className="mb-6 rounded-2xl border border-[#1C2A52] bg-[#0B1638] p-4">
+                                <p className="font-semibold text-[#E8F5FF]">Use your current location?</p>
+                                <p className="text-sm text-[#A8C5F5]/70">
                                     We will ask your browser for permission first.
                                 </p>
                                 <div className="mt-3 flex flex-wrap gap-2">
                                     <button
                                         onClick={requestUserLocation}
-                                        className="rounded-full bg-black px-4 py-2 text-sm font-semibold text-white"
+                                        className="rounded-full bg-[#21E6FF] px-4 py-2 text-sm font-semibold text-[#04101D]"
                                         disabled={isLocating}
                                     >
                                         {isLocating ? "Locating..." : "Use my location"}
                                     </button>
                                     <button
                                         onClick={() => fetchByCity("New York")}
-                                        className="rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-semibold"
+                                        className="rounded-full border border-[#2A3C66] bg-[#0C1430] px-4 py-2 text-sm font-semibold text-[#B9D6FF]"
                                     >
                                         Use default city
                                     </button>
                                 </div>
                                 {(locationError || (hasRequestedLocation && !isLocating)) &&
                                     locationError && (
-                                        <p className="mt-3 text-sm text-red-700">{locationError}</p>
+                                        <p className="mt-3 text-sm text-red-300">{locationError}</p>
                                     )}
                             </div>
                         )}
 
                         {error && (
-                            <div className="mb-6 rounded-2xl border border-red-300 bg-red-50 p-4 text-sm text-red-700">
+                            <div className="mb-6 rounded-2xl border border-red-400/40 bg-red-500/10 p-4 text-sm text-red-200">
                                 {error}
                             </div>
                         )}
 
                         {weather && (
-                            <div className="rounded-3xl border border-black/10 bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#10172B] p-6 text-white shadow-lg">
+                            <div className="rounded-3xl border border-[#18385C] bg-gradient-to-br from-[#081022] via-[#0B1C3C] to-[#0E2852] p-6 text-white shadow-[0_0_40px_rgba(33,230,255,0.2)]">
                                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                                     <div>
-                                        <p className="text-xs uppercase tracking-[0.3em] text-white/60">Now</p>
+                                        <p className="text-xs uppercase tracking-[0.3em] text-[#7DE2FF]/70">Live</p>
                                         <p className="text-2xl font-semibold">{weather.weather[0].main}</p>
-                                        <p className="text-sm text-white/70">{dateTime}</p>
+                                        <p className="text-sm text-[#B9D6FF]/70">{dateTime}</p>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <p className="text-4xl font-bold">
+                                        <p className="text-4xl font-bold glow-text">
                                             {weather.name.toUpperCase()}
                                         </p>
                                         <button
-                                            className="rounded-full border border-white/20 px-3 py-2 text-sm"
+                                            className="rounded-full border border-[#2A3C66] px-3 py-2 text-sm text-[#B9D6FF]"
                                             onClick={addToFavorites}
                                             title="Add to favorites"
                                             aria-label="Add to favorites"
                                         >
-                                            {favorites.includes(weather.name) ? "Saved" : "Save"}
+                                            {favorites.includes(weather.name) ? "Tracked" : "Track"}
                                         </button>
                                     </div>
                                 </div>
 
                                 <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                                     <div className="flex items-baseline gap-3">
-                                        <span className="font-display text-6xl md:text-7xl">
+                                        <span className="font-display text-6xl md:text-7xl glow-text">
                                             {Math.round(weather.main.temp)}°
                                         </span>
-                                        <span className="text-sm text-white/60">Feels precise.</span>
+                                        <span className="text-sm text-[#7DE2FF]/70">Signal stable.</span>
                                     </div>
-                                    <div className="text-sm text-white/70">
+                                    <div className="text-sm text-[#B9D6FF]/70">
                                         H: {Math.round(weather.main.temp_max)}° L: {Math.round(weather.main.temp_min)}°
                                     </div>
                                 </div>
@@ -312,11 +312,11 @@ const SearchComp = () => {
 
                     <aside className="space-y-6">
                         <div
-                            className={`${showFavorites ? "block" : "hidden"} lg:block rounded-3xl border border-black/10 bg-white/70 p-6 shadow-[0_20px_60px_-50px_rgba(0,0,0,0.4)] backdrop-blur`}
+                            className={`${showFavorites ? "block" : "hidden"} lg:block glow-card rounded-3xl border border-[#1F2A4A] bg-[#0B1230]/80 p-6 shadow-[0_20px_60px_-50px_rgba(15,220,255,0.7)] backdrop-blur`}
                         >
                             <div className="mb-4 flex items-center justify-between">
-                                <h2 className="font-display text-2xl">Favorites</h2>
-                                <span className="text-xs text-black/50">{favorites.length} saved</span>
+                                <h2 className="font-display text-2xl text-[#E8F5FF]">Tracked Cities</h2>
+                                <span className="text-xs text-[#7DE2FF]/70">{favorites.length} signals</span>
                             </div>
 
                             {favorites.length > 0 ? (
@@ -324,10 +324,10 @@ const SearchComp = () => {
                                     {favorites.map((city, index) => (
                                         <div
                                             key={index}
-                                            className="flex items-center justify-between rounded-2xl border border-black/10 bg-white px-4 py-3"
+                                            className="flex items-center justify-between rounded-2xl border border-[#1C2A52] bg-[#0B1638] px-4 py-3"
                                         >
                                             <button
-                                                className="text-left font-semibold"
+                                                className="text-left font-semibold text-[#E8F5FF]"
                                                 onClick={() => {
                                                     setSearchQuery(city);
                                                     fetchByCity(city);
@@ -341,7 +341,7 @@ const SearchComp = () => {
                                                     e.stopPropagation();
                                                     removeFavorite(city);
                                                 }}
-                                                className="text-xs font-semibold text-red-600"
+                                                className="text-xs font-semibold text-[#FF7DBA]"
                                             >
                                                 Remove
                                             </button>
@@ -349,14 +349,14 @@ const SearchComp = () => {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-sm text-black/60">No favorites yet.</p>
+                                <p className="text-sm text-[#A8C5F5]/70">No targets yet.</p>
                             )}
                         </div>
 
-                        <div className="rounded-3xl border border-black/10 bg-white/70 p-6 shadow-[0_20px_60px_-50px_rgba(0,0,0,0.4)] backdrop-blur">
+                        <div className="glow-card rounded-3xl border border-[#1F2A4A] bg-[#0B1230]/80 p-6 shadow-[0_20px_60px_-50px_rgba(15,220,255,0.7)] backdrop-blur">
                             <div className="mb-4 flex items-center justify-between">
-                                <h2 className="font-display text-2xl">5-Day Outlook</h2>
-                                <span className="text-xs text-black/50">Every 24 hours</span>
+                                <h2 className="font-display text-2xl text-[#E8F5FF]">Radar Outlook</h2>
+                                <span className="text-xs text-[#7DE2FF]/70">Every 24 hours</span>
                             </div>
                             {forecast ? (
                                 <div className="grid grid-cols-2 gap-3">
@@ -368,9 +368,9 @@ const SearchComp = () => {
                                         return (
                                             <div
                                                 key={forecastItem.dt_txt}
-                                                className="flex flex-col items-center gap-2 rounded-2xl border border-black/10 bg-white px-3 py-4"
+                                                className="flex flex-col items-center gap-2 rounded-2xl border border-[#1C2A52] bg-[#0B1638] px-3 py-4"
                                             >
-                                                <p className="text-sm font-semibold">{dayName}</p>
+                                                <p className="text-sm font-semibold text-[#E8F5FF]">{dayName}</p>
                                                 {forecastItem.weather[0].icon && (
                                                     <img
                                                         src={`http://openweathermap.org/img/wn/${forecastItem.weather[0].icon}@2x.png`}
@@ -378,13 +378,13 @@ const SearchComp = () => {
                                                         className="h-12 w-12"
                                                     />
                                                 )}
-                                                <p className="text-xs text-black/60">{forecastItem.weather[0].main}</p>
+                                                <p className="text-xs text-[#A8C5F5]/70">{forecastItem.weather[0].main}</p>
                                             </div>
                                         );
                                     })}
                                 </div>
                             ) : (
-                                <p className="text-sm text-black/60">Search a city to see the outlook.</p>
+                                <p className="text-sm text-[#A8C5F5]/70">Search a city to see the outlook.</p>
                             )}
                         </div>
                     </aside>

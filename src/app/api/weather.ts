@@ -35,3 +35,39 @@ export const getForecast = async (city: string) => {
         return { data: null, error: "Unable to fetch forecast data. Please try again." };
     }
 };
+
+export const getWeatherByCoords = async (lat: number, lon: number) => {
+    try {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=imperial`
+        );
+
+        if (!response.ok) {
+            throw new Error("Location not found");
+        }
+
+        const data = await response.json();
+        return { data, error: null };
+    } catch (error) {
+        console.log(error);
+        return { data: null, error: "Location not found. Please try again." };
+    }
+};
+
+export const getForecastByCoords = async (lat: number, lon: number) => {
+    try {
+        const response = await fetch(
+            `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=imperial`
+        );
+
+        if (!response.ok) {
+            throw new Error("Forecast data not available");
+        }
+
+        const data = await response.json();
+        return { data, error: null };
+    } catch (error) {
+        console.log(error);
+        return { data: null, error: "Unable to fetch forecast data. Please try again." };
+    }
+};

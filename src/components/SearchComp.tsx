@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { getWeatherData, getForecast } from "@/app/api/weather";
+import { getWeatherData, getForecast, getWeatherByCoords, getForecastByCoords } from "@/app/api/weather";
 import { saveToLocalStorage, getLocalStorage, removeFromLocalStorage } from "@/lib/localStorage";
 
 interface Weather {
@@ -20,10 +20,13 @@ const SearchComp = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [favorites, setFavorites] = useState(getLocalStorage());
     const [weather, setWeather] = useState<Weather | null>(null);
-const [forecast, setForecast] = useState<Forecast | null>(null);
+    const [forecast, setForecast] = useState<Forecast | null>(null);
     const [dateTime, setDateTime] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [showFavorites, setShowFavorites] = useState(false);
+    const [isLocating, setIsLocating] = useState(false);
+    const [locationError, setLocationError] = useState<string | null>(null);
+    const [hasRequestedLocation, setHasRequestedLocation] = useState(false);
 
     useEffect(() => {
         const updateClock = () => {
@@ -51,27 +54,99 @@ const [forecast, setForecast] = useState<Forecast | null>(null);
         const interval = setInterval(updateClock, 60000);
         return () => clearInterval(interval);
     }, []);
-    
+
+    const setLastCity = (city: string) => {
+        if (typeof window !== "undefined") {
+            localStorage.setItem("lastCity", city);
+        }
+    };
+
+    const getLastCity = () => {
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("lastCity");
+        }
+        return null;
+    };
+
+    const applyForecastFromResponse = (forecastResponse: { data: { list: ForecastItem[] } | null; error: string | null }) => {
+        if (forecastResponse.error || !forecastResponse.data) {
+            setError(forecastResponse.error ?? "Unable to fetch forecast data. Please try again.");
+            return;
+        }
+        const dailyForecast = forecastResponse.data.list.filter((item: ForecastItem, index: number) => index % 8 === 0);
+        setForecast(dailyForecast);
+        setError(null);
+    };
+
+    const fetchByCity = async (city: string) => {
+        const trimmed = city.trim();
+        if (!trimmed) return;
+        if (weather?.name?.toLowerCase() === trimmed.toLowerCase()) return;
+
+        const weatherResponse = await getWeatherData(trimmed);
+        if (weatherResponse.error || !weatherResponse.data) {
+            setError(weatherResponse.error ?? "City not found. Please try again.");
+            return;
+        }
+
+        setWeather(weatherResponse.data);
+        setError(null);
+        setLastCity(weatherResponse.data.name);
+
+        const forecastResponse = await getForecast(trimmed);
+        applyForecastFromResponse(forecastResponse);
+    };
+
+    const fetchByCoords = async (lat: number, lon: number) => {
+        const weatherResponse = await getWeatherByCoords(lat, lon);
+        if (weatherResponse.error || !weatherResponse.data) {
+            setError(weatherResponse.error ?? "Location not found. Please try again.");
+            return;
+        }
+
+        setWeather(weatherResponse.data);
+        setError(null);
+        setLastCity(weatherResponse.data.name);
+        setSearchQuery(weatherResponse.data.name);
+
+        const forecastResponse = await getForecastByCoords(lat, lon);
+        applyForecastFromResponse(forecastResponse);
+    };
+
+    const requestUserLocation = () => {
+        if (!navigator?.geolocation) {
+            setLocationError("Geolocation is not supported in this browser.");
+            return;
+        }
+
+        setIsLocating(true);
+        setLocationError(null);
+        setHasRequestedLocation(true);
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                fetchByCoords(latitude, longitude).finally(() => {
+                    setIsLocating(false);
+                });
+            },
+            () => {
+                setIsLocating(false);
+                setLocationError("Location permission denied. You can search by city instead.");
+            },
+            { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+        );
+    };
+
+    useEffect(() => {
+        const lastCity = getLastCity();
+        if (lastCity) {
+            fetchByCity(lastCity);
+        }
+    }, []);
 
     const handleSearch = async () => {
-        if (searchQuery.trim()) {
-            const weatherResponse = await getWeatherData(searchQuery);
-            if (weatherResponse.error) {
-                setError(weatherResponse.error);
-            } else {
-                setWeather(weatherResponse.data);
-                setError(null);
-            }
-
-            const forecastResponse = await getForecast(searchQuery);
-            if (forecastResponse.error) {
-                setError(forecastResponse.error);
-            } else {
-                const dailyForecast = forecastResponse.data.list.filter((item: ForecastItem, index: number) => index % 8 === 0);
-                setForecast(dailyForecast);
-                setError(null);
-            }
-        }
+        fetchByCity(searchQuery);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -120,8 +195,8 @@ const [forecast, setForecast] = useState<Forecast | null>(null);
                                 <p 
                                     className="font-bold cursor-pointer truncate"
                                     onClick={() => {
-                                        getWeatherData(city);
-                                        getForecast(city);
+                                        setSearchQuery(city);
+                                        fetchByCity(city);
                                         if (window.innerWidth < 768) setShowFavorites(false);
                                     }}
                                 >
@@ -171,9 +246,37 @@ const [forecast, setForecast] = useState<Forecast | null>(null);
                          Favorites
                     </button>
                 </div>
-                
-                
-                
+
+                {/* Location Prompt */}
+                {!weather && (
+                    <div className="w-full max-w-2xl bg-white/70 border border-black/10 p-4 rounded-xl shadow-sm mb-6">
+                        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+                            <div>
+                                <p className="font-semibold text-black">Use your current location?</p>
+                                <p className="text-sm text-black/70">We will ask your browser for permission first.</p>
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={requestUserLocation}
+                                    className="bg-black text-white px-4 py-2 rounded-full text-sm"
+                                    disabled={isLocating}
+                                >
+                                    {isLocating ? "Locating..." : "Use my location"}
+                                </button>
+                                <button
+                                    onClick={() => fetchByCity("New York")}
+                                    className="bg-white text-black px-4 py-2 rounded-full text-sm border border-black/20"
+                                >
+                                    Use default city
+                                </button>
+                            </div>
+                        </div>
+                        {(locationError || (hasRequestedLocation && !isLocating)) && locationError && (
+                            <p className="mt-3 text-sm text-red-700">{locationError}</p>
+                        )}
+                    </div>
+                )}
+
                 {/* Error Message */}
                 {error && (
                     <div className="w-full max-w-2xl bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
